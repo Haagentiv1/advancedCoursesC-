@@ -12,15 +12,16 @@ namespace WebApplication.other
 
         public static double ConvertToEur(this double usd)
         {
+            if (usd <= 0)
+            {
+                throw new ArgumentException("usd value cannot be less or equal to 0");
+            }
+
             if (usd > 0)
             {
                 return usd * 0.85;
             }
-
             return usd;
-
-            {
-            }
         }
     }
 }

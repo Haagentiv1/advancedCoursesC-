@@ -9,26 +9,68 @@ namespace WebApplication.Service
 {
     public class PizzaService
     {
-        public static IEnumerable<Pizza> GetAll()
+        public static List<Pizza> GetPizza()
         {
-            IEnumerable<Pizza> query =
+            List<Pizza> query = new List<Pizza>(
                 from pizza in PizzaRepository.GetPizzas()
-                select new Pizza
-                {
-                    id = pizza.id, name = pizza.name, ingredients = pizza.ingredients, price = Converter.ConvertToEur(pizza.price)
-                };
+                select pizza);
+            return query;
+
+
+        }
+
+        public static List<Pizza> GetAll()
+        {
+            List<Pizza> query =
+                new List<Pizza>(from pizza in PizzaRepository.GetPizzas()
+                    select new Pizza
+                    {
+                        id = pizza.id, name = pizza.name, ingredients = pizza.ingredients,
+                        price = pizza.price.ConvertToEur()
+                    });
+            if (query.Count == 0)
+            {
+                throw new ArgumentException("There is no pizza avalable");
+            }
+
             return query;
         }
 
 
-        public static IEnumerable<Pizza> GetPizzaByName(string name)
+        public static List<Pizza> GetPizzaByName(string name)
         {
-            IEnumerable<Pizza> query =
-                from pizz in PizzaRepository.GetPizzas()
-                where pizz.name.Contains(name)
-                select pizz;
+            List<Pizza> query =
+                new List<Pizza>(from pizz in PizzaRepository.GetPizzas()
+                    where pizz.name.Contains(name)
+                    select pizz);
+            if (query.Count == 0)
+            {
+                throw new ArgumentException(name + ": is not available");
+
+            }
             return query;
         }
         
+        
+        public static List<Pizza> GetPizzaByNameOrReturnAll(string name)
+        {
+            List<Pizza> query =
+                new List<Pizza>(from pizz in PizzaRepository.GetPizzas()
+                    where pizz.name.Contains(name)
+                    select pizz);
+            if (query.Count == 0)
+            { 
+                query = GetAll();
+                if (query.Count == 0)
+                {
+                    throw new ArgumentException("There is no pizza available");
+                }
+
+                {
+                    
+                }
+            }
+            return query;
+        }
     }
 }

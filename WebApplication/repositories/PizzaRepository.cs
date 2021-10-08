@@ -35,7 +35,13 @@ namespace WebApplication.repositories
 
             return pizzas;
         }
-        
+
+        public static List<Pizza> GetEmptylist()
+        {
+            List < Pizza > pizzas = new List<Pizza>();
+            return pizzas;
+        }
+
     }
 
     
